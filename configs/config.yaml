@@ -1,0 +1,66 @@
+system:
+  project_name: "Fraud Risk Intelligence & Detection Platform"
+  version: "1.0.0"
+  random_seed: 42
+
+paths:
+  raw_data: "data/raw/creditcard.csv"
+  processed_dir: "data/processed"
+  artifacts_dir: "artifacts"
+  model_dir: "artifacts/models"
+  reports_dir: "artifacts/reports"
+
+data:
+  target_col: "Class"
+  time_col: "Time"
+  amount_col: "Amount"
+  temporal_split:
+    train_ratio: 0.70
+    val_ratio: 0.15
+    test_ratio: 0.15
+
+features:
+  behavioral:
+    log_amount: true
+    circadian_encoding: true
+    amount_zscore: true
+
+models:
+  baseline:
+    type: "logistic_regression"
+    max_iter: 1000
+    class_weight: "balanced"
+    C: 0.1
+  xgboost:
+    n_estimators: 250
+    max_depth: 5
+    learning_rate: 0.05
+    subsample: 0.8
+    colsample_bytree: 0.8
+    scale_pos_weight: 578.0  # Approx ratio of negative to positive class (~284,315 / 492)
+    eval_metric: "aucpr"
+    early_stopping_rounds: 25
+  anomaly:
+    type: "isolation_forest"
+    n_estimators: 100
+    contamination: 0.002
+    random_state: 42
+
+risk_engine:
+  weights:
+    xgboost_prob: 0.80
+    anomaly_score: 0.20
+  thresholds:
+    low_risk_max: 35.0
+    medium_risk_max: 70.0
+    high_risk_min: 70.0
+  actions:
+    LOW: "ALLOW"
+    MEDIUM: "FLAG_CHALLENGE"
+    HIGH: "BLOCK_AND_INVESTIGATE"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  title: "Fraud Risk Intelligence API"
+  version: "1.0.0"

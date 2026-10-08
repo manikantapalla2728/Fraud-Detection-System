@@ -1,0 +1,68 @@
+{
+  "dataset_split": {
+    "validation_report": {
+      "is_valid": true,
+      "total_records": 284807,
+      "error_count": 0,
+      "warning_count": 3,
+      "errors": [],
+      "warnings": [
+        "Detected 1825 zero-dollar transactions ($0.00). Flagged as prospective authorization pings.",
+        "Detected 1 extreme value transactions (> $20,000). Retained as legitimate high-value behavior.",
+        "Found 1081 duplicate rows (0.38%). In payment rails, exact telemetry replays occur during automated fraud retries."
+      ],
+      "metrics": {
+        "null_counts": {},
+        "fraud_rate": 0.001727485630620034,
+        "fraud_count": 492,
+        "zero_amount_count": 1825,
+        "amount_max": 25691.16,
+        "amount_min": 0.0,
+        "duplicate_rows": 1081
+      }
+    },
+    "train_size": 199364,
+    "train_fraud_rate": 0.0019261250777472363,
+    "val_size": 42721,
+    "val_fraud_rate": 0.001310830738980829,
+    "test_size": 42722,
+    "test_fraud_rate": 0.0012171714807359207,
+    "files": {
+      "train": "data\\processed\\train.parquet",
+      "val": "data\\processed\\val.parquet",
+      "test": "data\\processed\\test.parquet"
+    }
+  },
+  "comparison_table": {
+    "baseline": {
+      "val_pr_auc": 0.8517080156902959,
+      "val_roc_auc": 0.985090656443053,
+      "test_pr_auc": 0.7686413912525523,
+      "test_roc_auc": 0.9732405220745974,
+      "test_f1": 0.04341534008683068,
+      "test_precision": 0.022266204849084613,
+      "test_recall": 0.8653846153846154,
+      "test_brier": 0.03679415546248039
+    },
+    "xgboost": {
+      "val_pr_auc": 0.8241145717992536,
+      "val_roc_auc": 0.9852181028276774,
+      "test_pr_auc": 0.7438395133815834,
+      "test_roc_auc": 0.9777703664978097,
+      "test_f1": 0.6972477064220184,
+      "test_precision": 0.6666666666666666,
+      "test_recall": 0.7307692307692307,
+      "test_brier": 0.0258895643055439,
+      "test_recall_at_100": 0.75,
+      "test_precision_at_100": 0.39,
+      "calibrated_threshold": 0.8277706503868103,
+      "confusion_matrix": {
+        "tn": 42651,
+        "fp": 19,
+        "fn": 14,
+        "tp": 38
+      }
+    }
+  },
+  "feature_count": 42
+}
